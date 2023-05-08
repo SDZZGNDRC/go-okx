@@ -3,11 +3,16 @@ package rest
 import (
 	"encoding/json"
 	"fmt"
+	"io"
+	"io/ioutil"
+	"net/http"
+	"os"
+	"strings"
 
-	"github.com/SDZZGNDRC/go-okx/common"
-	"github.com/SDZZGNDRC/go-okx/rest/api"
+	"go-okx/common"
+	"go-okx/rest/api"
+
 	"github.com/google/go-querystring/query"
-	"github.com/valyala/fasthttp"
 )
 
 var (
@@ -26,16 +31,16 @@ var (
 type Client struct {
 	Host string
 	Auth common.Auth
-	C    *fasthttp.Client
+	C    *http.Client
 }
 
 // new *Client
-func New(host string, auth common.Auth, c *fasthttp.Client) *Client {
+func New(host string, auth common.Auth, c *http.Client) *Client {
 	if host == "" {
 		host = "https://www.okx.com"
 	}
 	if c == nil {
-		c = DefaultFastHttpClient
+		c = http.DefaultClient
 	}
 
 	return &Client{
@@ -46,8 +51,9 @@ func New(host string, auth common.Auth, c *fasthttp.Client) *Client {
 }
 
 // do request
-func (c *Client) Do(req api.IRequest, resp api.IResponse) error {
-	data, err := c.do(req)
+// Use package net/http
+func (c *Client) Do2(req api.IRequest, resp api.IResponse) error {
+	data, err := c.do2(req)
 	if err != nil {
 		return err
 	}
@@ -62,50 +68,134 @@ func (c *Client) Do(req api.IRequest, resp api.IResponse) error {
 	return nil
 }
 
-// do request
-func (c *Client) do(r api.IRequest) ([]byte, error) {
-	req := c.newRequest(r)
-	resp := fasthttp.AcquireResponse()
-	defer func() {
-		fasthttp.ReleaseRequest(req)
-		fasthttp.ReleaseResponse(resp)
-	}()
-
-	if err := c.C.Do(req, resp); err != nil {
-		return nil, err
-	}
-	if resp.StatusCode() != fasthttp.StatusOK {
-		return nil, fmt.Errorf("http status code:%d, desc:%s", resp.StatusCode(), string(resp.Body()))
-	}
-
-	return resp.Body(), nil
+// for historical dealprices data
+func (c *Client) Do3(req api.IRequest, FilePath string) error {
+	// data, err := c.do3(req)
+	err := c.DumpFile(req, FilePath)
+	return err
 }
 
-// new *fasthttp.Request
-func (c *Client) newRequest(r api.IRequest) *fasthttp.Request {
-	req := fasthttp.AcquireRequest()
-	sign := c.newSignature(r)
+// do2 request
+// Use package net/http
+func (c *Client) do2(r api.IRequest) ([]byte, error) {
+	var body []byte
+	var err error
+	req := c.newRequest2(r)
+	resp, err := c.C.Do(req)
+	if err != nil { // ======================
+		return nil, err
+	}
+	defer resp.Body.Close()
+	if resp.StatusCode != http.StatusOK {
+		body, err = ioutil.ReadAll(resp.Body)
+		if err != nil {
+			panic(err)
+		}
+		return nil, fmt.Errorf("http status code:%d, desc:%s", resp.StatusCode, string(body))
+	}
+	body, _ = ioutil.ReadAll(resp.Body)
+	return body, nil
+}
 
+func (c *Client) DumpFile(r api.IRequest, FilePath string) error {
+	var body []byte
+	var err error
+	req := c.newRequest3(r)
+	resp, err := c.C.Do(req)
+	if err != nil { // ======================
+		return err
+	}
+	defer resp.Body.Close()
+	if resp.StatusCode != http.StatusOK {
+		body, err = ioutil.ReadAll(resp.Body)
+		if err != nil {
+			panic(err)
+		}
+		return fmt.Errorf("http status code:%d, desc:%s", resp.StatusCode, string(body))
+	}
+	file, err := os.Create(FilePath)
+	if err != nil {
+		fmt.Println("[Error] Can't create file: ", err.Error())
+		os.Exit(-1)
+	}
+	defer file.Close()
+	_, err = io.Copy(file, resp.Body)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+// new Request
+// for package net/http
+func (c *Client) newRequest2(r api.IRequest) *http.Request {
+	sign := c.newSignature(r)
+	var body io.Reader = nil
 	headers := map[string]string{
-		fasthttp.HeaderContentType: "application/json;charset=utf-8",
-		fasthttp.HeaderAccept:      "application/json",
-		"OK-ACCESS-KEY":            c.Auth.ApiKey,
-		"OK-ACCESS-PASSPHRASE":     c.Auth.Passphrase,
-		"OK-ACCESS-SIGN":           sign.Build(),
-		"OK-ACCESS-TIMESTAMP":      sign.Timestamp,
+		"Content-Type":         "application/json;charset=utf-8",
+		"Accept":               "application/json",
+		"OK-ACCESS-KEY":        c.Auth.ApiKey,
+		"OK-ACCESS-PASSPHRASE": c.Auth.Passphrase,
+		"OK-ACCESS-SIGN":       sign.Build(),
+		"OK-ACCESS-TIMESTAMP":  sign.Timestamp,
 	}
 	if c.Auth.Simulated {
 		headers["x-simulated-trading"] = "1"
 	}
-	for k, v := range headers {
-		req.Header.Set(k, v)
-	}
-	req.Header.SetMethod(sign.Method)
-
-	req.SetRequestURI(c.Host + sign.Path)
 	if sign.Body != "" {
-		req.SetBodyString(sign.Body)
+		body = strings.NewReader(sign.Body)
+		// body = ioutil.NopCloser(strings.NewReader(sign.Body))
 	}
+	req, err := http.NewRequest(r.GetMethod(), c.Host+sign.Path, body)
+	if err != nil {
+		panic(err)
+	}
+	if isSpecialPath(r.GetPath()) {
+		for k, v := range headers {
+			req.Header.Set(k, v)
+		}
+		// fmt.Println("[DEBUG] Add Signature")
+	}
+
+	// to solve to EOF problem
+	// Refer to https://stackoverflow.com/questions/17714494/golang-http-request-results-in-eof-errors-when-making-multiple-requests-successi
+	req.Close = true
+
+	return req
+}
+
+func (c *Client) newRequest3(r api.IRequest) *http.Request {
+	sign := c.newSignature(r)
+	var body io.Reader = nil
+	headers := map[string]string{
+		"Content-Type":         "application/json;charset=utf-8",
+		"Accept":               "application/json",
+		"OK-ACCESS-KEY":        c.Auth.ApiKey,
+		"OK-ACCESS-PASSPHRASE": c.Auth.Passphrase,
+		"OK-ACCESS-SIGN":       sign.Build(),
+		"OK-ACCESS-TIMESTAMP":  sign.Timestamp,
+	}
+	if c.Auth.Simulated {
+		headers["x-simulated-trading"] = "1"
+	}
+	if sign.Body != "" {
+		body = strings.NewReader(sign.Body)
+		// body = ioutil.NopCloser(strings.NewReader(sign.Body))
+	}
+	req, err := http.NewRequest(r.GetMethod(), "https://static.okx.com"+sign.Path, body)
+	if err != nil {
+		panic(err)
+	}
+	if isSpecialPath(r.GetPath()) {
+		for k, v := range headers {
+			req.Header.Set(k, v)
+		}
+		// fmt.Println("[DEBUG] Add Signature")
+	}
+
+	// to solve to EOF problem
+	// Refer to https://stackoverflow.com/questions/17714494/golang-http-request-results-in-eof-errors-when-making-multiple-requests-successi
+	req.Close = true
 
 	return req
 }
@@ -122,4 +212,14 @@ func (c *Client) newSignature(r api.IRequest) *common.Signature {
 	}
 
 	return c.Auth.Signature(r.GetMethod(), path, string(body), false)
+}
+
+// Special Path should contain signature.
+func isSpecialPath(path string) bool {
+	for _, b := range specialPath {
+		if b == path {
+			return true
+		}
+	}
+	return false
 }
