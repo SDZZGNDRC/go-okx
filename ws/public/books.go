@@ -5,6 +5,8 @@ import (
 	"go-okx/ws"
 )
 
+// 深度频道
+
 type HandlerBooks func(EventBooks)
 
 type EventBooks struct {

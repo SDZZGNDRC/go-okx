@@ -7,7 +7,7 @@ import (
 	"testing"
 )
 
-func TestOrderBooks(t *testing.T) {
+func TestBooks(t *testing.T) {
 	args := &ws.Args{
 		Channel: "books",
 		InstId:  "BTC-USDT",
