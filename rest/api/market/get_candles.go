@@ -1,6 +1,6 @@
 package market
 
-import "go-okx/rest/api"
+import "github.com/SDZZGNDRC/go-okx/rest/api"
 
 const GetCandlesLimitNumPerSec = 20
 const GetCandlesLimitRule = "IP"

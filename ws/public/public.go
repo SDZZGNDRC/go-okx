@@ -1,6 +1,6 @@
 package public
 
-import "go-okx/ws"
+import "github.com/SDZZGNDRC/go-okx/ws"
 
 type Public struct {
 	C *ws.Client

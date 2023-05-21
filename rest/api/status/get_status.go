@@ -1,6 +1,6 @@
 package status
 
-import "go-okx/rest/api"
+import "github.com/SDZZGNDRC/go-okx/rest/api"
 
 const GetStatusLimitNumPerSec = 0.2
 const GetStatusLimitRule = "IP"

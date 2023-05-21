@@ -1,6 +1,6 @@
 package market
 
-import "go-okx/rest/api"
+import "github.com/SDZZGNDRC/go-okx/rest/api"
 
 const GetBooksLimitNumPerSec = 10
 const GetBooksLimitRule = "IP"

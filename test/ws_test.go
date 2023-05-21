@@ -1,10 +1,11 @@
 package test
 
 import (
-	"go-okx/ws"
-	"go-okx/ws/public"
 	"log"
 	"testing"
+
+	"github.com/SDZZGNDRC/go-okx/ws"
+	"github.com/SDZZGNDRC/go-okx/ws/public"
 )
 
 func TestBooks(t *testing.T) {

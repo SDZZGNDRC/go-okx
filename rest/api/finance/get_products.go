@@ -1,6 +1,6 @@
 package finance
 
-import "go-okx/rest/api"
+import "github.com/SDZZGNDRC/go-okx/rest/api"
 
 const GetProductsLimitNumPerSec = 3
 const GetProductsLimitRule = "UserID"

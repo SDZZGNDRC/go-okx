@@ -1,6 +1,6 @@
 package market
 
-import "go-okx/rest/api"
+import "github.com/SDZZGNDRC/go-okx/rest/api"
 
 func NewGetP24Volume(param *GetP24VolumeParam) (api.IRequest, api.IResponse) {
 	return &api.Request{

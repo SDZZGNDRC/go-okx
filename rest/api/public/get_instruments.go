@@ -1,6 +1,6 @@
 package public
 
-import "go-okx/rest/api"
+import "github.com/SDZZGNDRC/go-okx/rest/api"
 
 func NewGetInstruments(param *GetInstrumentsParam) (api.IRequest, api.IResponse) {
 	return &api.Request{

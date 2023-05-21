@@ -3,7 +3,7 @@ package public
 import (
 	"encoding/json"
 
-	"go-okx/ws"
+	"github.com/SDZZGNDRC/go-okx/ws"
 )
 
 // 标记价格频道

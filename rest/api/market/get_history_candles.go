@@ -1,6 +1,6 @@
 package market
 
-import "go-okx/rest/api"
+import "github.com/SDZZGNDRC/go-okx/rest/api"
 
 const GetHistoryCandlesLimitNumPerSec = 10
 const GetHistoryCandlesLimitRule = "IP"

@@ -1,7 +1,7 @@
 package market
 
 import (
-	"go-okx/rest/api"
+	"github.com/SDZZGNDRC/go-okx/rest/api"
 )
 
 const GetTradesLimitNumPerSec = 50

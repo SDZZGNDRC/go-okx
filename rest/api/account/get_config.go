@@ -1,6 +1,6 @@
 package account
 
-import "go-okx/rest/api"
+import "github.com/SDZZGNDRC/go-okx/rest/api"
 
 const GetConfigLimitNumPerSec = 2.5
 const GetConfigLimitRule = "UserID"

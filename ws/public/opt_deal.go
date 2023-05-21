@@ -2,7 +2,8 @@ package public
 
 import (
 	"encoding/json"
-	"go-okx/ws"
+
+	"github.com/SDZZGNDRC/go-okx/ws"
 )
 
 // 期权公共成交频道

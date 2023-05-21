@@ -1,6 +1,6 @@
 package statistics
 
-import "go-okx/rest/api"
+import "github.com/SDZZGNDRC/go-okx/rest/api"
 
 const GetOIVStrikeLimitNumPerSec = 2.5
 const GetOIVStrikeLimitRule = "IP"

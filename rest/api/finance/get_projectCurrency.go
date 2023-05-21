@@ -3,7 +3,8 @@ package finance
 import (
 	"encoding/json"
 	"fmt"
-	"go-okx/rest/api"
+
+	"github.com/SDZZGNDRC/go-okx/rest/api"
 )
 
 func NewGetProjectCurrency(param *GetProjectCurrencyParam) (api.IRequest, api.IResponse) {

@@ -9,8 +9,9 @@ import (
 	"os"
 	"strings"
 
-	"go-okx/common"
-	"go-okx/rest/api"
+	"github.com/SDZZGNDRC/go-okx/rest/api"
+
+	"github.com/SDZZGNDRC/go-okx/common"
 
 	"github.com/google/go-querystring/query"
 )

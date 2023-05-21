@@ -1,6 +1,6 @@
 package custom
 
-import "go-okx/rest/api"
+import "github.com/SDZZGNDRC/go-okx/rest/api"
 
 func NewGetFileContent(param *GetFileContentParam) (api.IRequest, api.IResponse) {
 	return &api.Request{

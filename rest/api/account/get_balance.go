@@ -1,6 +1,6 @@
 package account
 
-import "go-okx/rest/api"
+import "github.com/SDZZGNDRC/go-okx/rest/api"
 
 const GetBalanceLimitNumPerSec = 5
 const GetBalanceLimitRule = "UserID"

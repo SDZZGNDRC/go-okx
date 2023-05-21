@@ -3,7 +3,7 @@ package public
 import (
 	"encoding/json"
 
-	"go-okx/ws"
+	"github.com/SDZZGNDRC/go-okx/ws"
 )
 
 // 交易频道

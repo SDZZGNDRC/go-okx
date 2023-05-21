@@ -1,7 +1,7 @@
 package trade
 
 import (
-	"go-okx/rest/api"
+	"github.com/SDZZGNDRC/go-okx/rest/api"
 )
 
 const GetOrderLimitNumPerSec = 30
