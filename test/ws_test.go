@@ -49,6 +49,7 @@ func BooksCorrectnessHelper(instId string) {
 		InstId:  instId,
 	}
 	handler := func(e public.EventBooks) {
+		var t [][]string
 		if e.Action == "snapshot" { // 全量数据
 			CurrentBooks.Asks = e.Data[0].Asks
 			CurrentBooks.Bids = e.Data[0].Bids
@@ -75,10 +76,14 @@ func BooksCorrectnessHelper(instId string) {
 					if ask[1] == "0" {
 						// 数量为0，从snapshot中删除该ask
 						// log.Println("Flag1")
-						CurrentBooks.Asks = append(
-							CurrentBooks.Asks[:existingIndex],
-							CurrentBooks.Asks[existingIndex+1:]...,
-						)
+						t = [][]string{}
+						for i := 0; i < existingIndex; i++ {
+							t = append(t, CurrentBooks.Asks[i])
+						}
+						for i := existingIndex + 1; i < len(CurrentBooks.Asks); i++ {
+							t = append(t, CurrentBooks.Asks[i])
+						}
+						CurrentBooks.Asks = t
 					} else {
 						// 数量有变化，替换该ask的数据
 						// log.Println("Flag2")
@@ -97,8 +102,14 @@ func BooksCorrectnessHelper(instId string) {
 					if insertIndex == len(CurrentBooks.Asks) {
 						CurrentBooks.Asks = append(CurrentBooks.Asks, ask)
 					} else {
-						copy(CurrentBooks.Asks[insertIndex+1:], CurrentBooks.Asks[insertIndex:]) // panic: runtime error: slice bounds out of range [31:30]
-						CurrentBooks.Asks[insertIndex] = ask
+						t = [][]string{}
+						t = append(t, CurrentBooks.Asks[:insertIndex]...)
+						t = append(t, ask)
+						for i := insertIndex; i < len(CurrentBooks.Asks); i++ {
+							t = append(t, CurrentBooks.Asks[i])
+						}
+						CurrentBooks.Asks = t
+						// log.Printf("Asks: insertIndex: %d, len: %d", insertIndex, len(CurrentBooks.Asks))
 					}
 				}
 			}
@@ -125,10 +136,14 @@ func BooksCorrectnessHelper(instId string) {
 					if bid[1] == "0" {
 						// 数量为0，从snapshot中删除该bid
 						// log.Println("Flag4")
-						CurrentBooks.Bids = append(
-							CurrentBooks.Bids[:existingIndex],
-							CurrentBooks.Bids[existingIndex+1:]...,
-						)
+						t = [][]string{}
+						for i := 0; i < existingIndex; i++ {
+							t = append(t, CurrentBooks.Bids[i])
+						}
+						for i := existingIndex + 1; i < len(CurrentBooks.Bids); i++ {
+							t = append(t, CurrentBooks.Bids[i])
+						}
+						CurrentBooks.Bids = t
 					} else {
 						// 数量有变化，替换该bid的数据
 						// log.Println("Flag5")
@@ -147,8 +162,14 @@ func BooksCorrectnessHelper(instId string) {
 					if insertIndex == len(CurrentBooks.Bids) {
 						CurrentBooks.Bids = append(CurrentBooks.Bids, bid)
 					} else {
-						copy(CurrentBooks.Bids[insertIndex+1:], CurrentBooks.Bids[insertIndex:]) // panic: runtime error: slice bounds out of range [31:30]
-						CurrentBooks.Bids[insertIndex] = bid
+						t = [][]string{}
+						t = append(t, CurrentBooks.Bids[:insertIndex]...)
+						t = append(t, bid)
+						for i := insertIndex; i < len(CurrentBooks.Bids); i++ {
+							t = append(t, CurrentBooks.Bids[i])
+						}
+						CurrentBooks.Bids = t
+						// log.Printf("Bids: insertIndex: %d, len: %d", insertIndex, len(CurrentBooks.Bids))
 					}
 				}
 			}
