@@ -3,35 +3,44 @@ package public
 import (
 	"fmt"
 	"hash/crc32"
-	"sort"
 )
 
 // 计算订单簿的校验和
 func CalculateChecksum(book Book) int32 {
-	bookString := BookToString(book.Asks, book.Bids)
+	var bids, asks []string
+	for _, bid := range book.Bids {
+		bids = append(bids, bookToString(bid))
+	}
+	for _, ask := range book.Asks {
+		asks = append(asks, bookToString(ask))
+	}
 
+	// Trim bids and asks to 25 levels
+	if len(bids) > 25 {
+		bids = bids[:25]
+	}
+	if len(asks) > 25 {
+		asks = asks[:25]
+	}
+
+	// Concatenate bids and asks strings
+	var checksumString string
+	for i := 0; i < len(bids) || i < len(asks); i++ {
+		if i < len(bids) {
+			checksumString += bids[i] + ":"
+		}
+		if i < len(asks) {
+			checksumString += asks[i] + ":"
+		}
+	}
+	checksumString = checksumString[:len(checksumString)-1] // 去除末尾的":"
+	// log.Println(checksumString)
 	// Calculate CRC32 checksum
-	checksum := crc32.ChecksumIEEE([]byte(bookString))
+	checksum := crc32.ChecksumIEEE([]byte(checksumString))
 
 	return int32(checksum)
 }
 
-func BookToString(asks [][]string, bids [][]string) string {
-	var bookString string
-	numbers := []int{len(asks), len(bids), 25}
-	sort.Ints(numbers)
-	l := numbers[0]
-	for i := 0; i < l; i++ {
-		bookString += fmt.Sprintf(
-			"%s:%s:%s:%s",
-			bids[i][0],
-			bids[i][1],
-			asks[i][0],
-			asks[i][1],
-		)
-		if i != l-1 {
-			bookString += ":"
-		}
-	}
-	return bookString
+func bookToString(book []string) string {
+	return fmt.Sprintf("%s:%s", book[0], book[1])
 }
