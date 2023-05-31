@@ -75,23 +75,16 @@ func BooksCorrectnessHelper(instId string) {
 				if existingIndex != -1 {
 					if ask[1] == "0" {
 						// 数量为0，从snapshot中删除该ask
-						// log.Println("Flag1")
 						t = [][]string{}
-						for i := 0; i < existingIndex; i++ {
-							t = append(t, CurrentBooks.Asks[i])
-						}
-						for i := existingIndex + 1; i < len(CurrentBooks.Asks); i++ {
-							t = append(t, CurrentBooks.Asks[i])
-						}
+						t = append(t, CurrentBooks.Asks[:existingIndex]...)
+						t = append(t, CurrentBooks.Asks[existingIndex+1:]...)
 						CurrentBooks.Asks = t
 					} else {
 						// 数量有变化，替换该ask的数据
-						// log.Println("Flag2")
 						CurrentBooks.Asks[existingIndex] = ask
 					}
 				} else {
 					// 如果没有相同价格的ask，按照价格升序插入
-					// log.Println("Flag3")
 					insertIndex := sort.Search(len(CurrentBooks.Asks), func(i int) bool {
 						t, err := strconv.ParseFloat(CurrentBooks.Asks[i][0], 64)
 						if err != nil {
@@ -105,9 +98,7 @@ func BooksCorrectnessHelper(instId string) {
 						t = [][]string{}
 						t = append(t, CurrentBooks.Asks[:insertIndex]...)
 						t = append(t, ask)
-						for i := insertIndex; i < len(CurrentBooks.Asks); i++ {
-							t = append(t, CurrentBooks.Asks[i])
-						}
+						t = append(t, CurrentBooks.Asks[insertIndex:]...)
 						CurrentBooks.Asks = t
 						// log.Printf("Asks: insertIndex: %d, len: %d", insertIndex, len(CurrentBooks.Asks))
 					}
@@ -135,23 +126,16 @@ func BooksCorrectnessHelper(instId string) {
 				if existingIndex != -1 {
 					if bid[1] == "0" {
 						// 数量为0，从snapshot中删除该bid
-						// log.Println("Flag4")
 						t = [][]string{}
-						for i := 0; i < existingIndex; i++ {
-							t = append(t, CurrentBooks.Bids[i])
-						}
-						for i := existingIndex + 1; i < len(CurrentBooks.Bids); i++ {
-							t = append(t, CurrentBooks.Bids[i])
-						}
+						t = append(t, CurrentBooks.Bids[:existingIndex]...)
+						t = append(t, CurrentBooks.Bids[existingIndex+1:]...)
 						CurrentBooks.Bids = t
 					} else {
 						// 数量有变化，替换该bid的数据
-						// log.Println("Flag5")
 						CurrentBooks.Bids[existingIndex] = bid
 					}
 				} else {
 					// 如果没有相同价格的bid，按照价格升序插入
-					// log.Println("Flag6")
 					insertIndex := sort.Search(len(CurrentBooks.Bids), func(i int) bool {
 						t, err := strconv.ParseFloat(CurrentBooks.Bids[i][0], 64)
 						if err != nil {
@@ -165,11 +149,10 @@ func BooksCorrectnessHelper(instId string) {
 						t = [][]string{}
 						t = append(t, CurrentBooks.Bids[:insertIndex]...)
 						t = append(t, bid)
-						for i := insertIndex; i < len(CurrentBooks.Bids); i++ {
-							t = append(t, CurrentBooks.Bids[i])
-						}
+						t = append(t, CurrentBooks.Bids[insertIndex:]...)
 						CurrentBooks.Bids = t
-						// log.Printf("Bids: insertIndex: %d, len: %d", insertIndex, len(CurrentBooks.Bids))
+						// copy(CurrentBooks.Bids[insertIndex+1:], CurrentBooks.Bids[insertIndex:])
+						// CurrentBooks.Bids[insertIndex] = bid
 					}
 				}
 			}
