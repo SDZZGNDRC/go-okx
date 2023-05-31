@@ -20,7 +20,7 @@ type Book struct {
 	Asks     [][]string `json:"asks"`
 	Bids     [][]string `json:"bids"`
 	Ts       int64      `json:"ts,string"`
-	Checksum int64      `json:"checksum"`
+	Checksum int32      `json:"checksum"`
 }
 
 // default subscribe
