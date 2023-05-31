@@ -31,7 +31,10 @@ func TestBooks(t *testing.T) {
 
 // 测试WebSocket方式获取订单簿数据的正确性
 func TestBooksCorrectness(t *testing.T) {
-	instIds := []string{"APT-USDC"}
+	instIds := []string{
+		"BTC-USDT",
+		"ETH-USDT",
+	}
 	for _, instId := range instIds {
 		go BooksCorrectnessHelper(instId)
 		time.Sleep(time.Millisecond * 100)
@@ -43,7 +46,6 @@ func TestBooksCorrectness(t *testing.T) {
 func BooksCorrectnessHelper(instId string) {
 	LastBooks := public.Book{}
 	CurrentBooks := public.Book{}
-	var count int64
 	args := &ws.Args{
 		Channel: "books",
 		InstId:  instId,
@@ -180,8 +182,6 @@ func BooksCorrectnessHelper(instId string) {
 			panic("Stop")
 		} else {
 			LastBooks = CurrentBooks
-			log.Printf("No %d: Correct...", count)
-			count += 1
 		}
 	}
 
