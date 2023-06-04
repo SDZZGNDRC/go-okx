@@ -41,20 +41,20 @@ func NewClient(endpoint string) *Client {
 }
 
 // operate
-func (c *Client) Operate(operate *Operate, callback OperateCallback) error {
+func (c *Client) Operate(operate *Operate, callback OperateCallback) (*websocket.Conn, error) {
 	conn, _, err := c.dial()
 	if err != nil {
-		return err
+		return conn, err
 	}
 
 	if callback != nil { // call the callback function after create a new connection
 		if err := callback(conn); err != nil {
-			return err
+			return conn, err
 		}
 	}
 
 	if err := c.MessageOperate(conn, operate); err != nil {
-		return err
+		return conn, err
 	}
 
 	if operate.Handler != nil {
@@ -63,7 +63,7 @@ func (c *Client) Operate(operate *Operate, callback OperateCallback) error {
 		go c.messageLoop(conn, operate)
 	}
 
-	return nil
+	return conn, nil
 }
 
 // message operate

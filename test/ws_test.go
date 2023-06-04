@@ -23,7 +23,7 @@ func TestBooks(t *testing.T) {
 	handlerError := func(err error) {
 		panic(err)
 	}
-	if err := public.SubscribeBooks(args, handler, handlerError, false); err != nil {
+	if _, err := public.SubscribeBooks(args, handler, handlerError, false); err != nil {
 		panic(err)
 	}
 	select {} // Wait forever
@@ -188,7 +188,7 @@ func BooksCorrectnessHelper(instId string) {
 	handlerError := func(err error) {
 		panic(err)
 	}
-	if err := public.SubscribeBooks(args, handler, handlerError, false); err != nil {
+	if _, err := public.SubscribeBooks(args, handler, handlerError, false); err != nil {
 		panic(err)
 	}
 	select {} // Wait forever

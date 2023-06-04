@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 
 	"github.com/SDZZGNDRC/go-okx/ws"
+	"github.com/gorilla/websocket"
 )
 
 // 持仓总量频道
@@ -25,7 +26,7 @@ type OpenInterest struct {
 }
 
 // default subscribe
-func SubscribeOpenInterest(instId string, handler HandlerOpenInterest, handlerError ws.HandlerError, simulated bool) error {
+func SubscribeOpenInterest(instId string, handler HandlerOpenInterest, handlerError ws.HandlerError, simulated bool) (*websocket.Conn, error) {
 	args := &ws.Args{
 		Channel: "open-interest",
 		InstId:  instId,

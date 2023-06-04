@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 
 	"github.com/SDZZGNDRC/go-okx/ws"
+	"github.com/gorilla/websocket"
 )
 
 // 深度频道
@@ -24,7 +25,7 @@ type Book struct {
 }
 
 // default subscribe
-func SubscribeBooks(args *ws.Args, handler HandlerBooks, handlerError ws.HandlerError, simulated bool) error {
+func SubscribeBooks(args *ws.Args, handler HandlerBooks, handlerError ws.HandlerError, simulated bool) (*websocket.Conn, error) {
 	h := func(message []byte) { // convert raw data into EventBooks
 		var event EventBooks
 		if err := json.Unmarshal(message, &event); err != nil {

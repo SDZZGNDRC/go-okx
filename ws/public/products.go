@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 
 	"github.com/SDZZGNDRC/go-okx/ws"
+	"github.com/gorilla/websocket"
 )
 
 // 产品频道
@@ -47,7 +48,7 @@ type Product struct {
 }
 
 // default subscribe
-func SubscribeProducts(args *ws.Args, handler HandlerProducts, handlerError ws.HandlerError, simulated bool) error {
+func SubscribeProducts(args *ws.Args, handler HandlerProducts, handlerError ws.HandlerError, simulated bool) (*websocket.Conn, error) {
 	h := func(message []byte) {
 		var event EventProducts
 		if err := json.Unmarshal(message, &event); err != nil {

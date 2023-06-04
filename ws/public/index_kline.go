@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 
 	"github.com/SDZZGNDRC/go-okx/ws"
+	"github.com/gorilla/websocket"
 )
 
 // 指数K线频道
@@ -17,7 +18,7 @@ type EventIndexKline struct {
 }
 
 // default subscribe
-func SubscribeIndexKline(args *ws.Args, handler HandlerIndexKline, handlerError ws.HandlerError, simulated bool) error {
+func SubscribeIndexKline(args *ws.Args, handler HandlerIndexKline, handlerError ws.HandlerError, simulated bool) (*websocket.Conn, error) {
 	h := func(message []byte) {
 		var event EventIndexKline
 		if err := json.Unmarshal(message, &event); err != nil {

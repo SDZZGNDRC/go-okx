@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 
 	"github.com/SDZZGNDRC/go-okx/ws"
+	"github.com/gorilla/websocket"
 )
 
 // Status 频道
@@ -32,7 +33,7 @@ type Status struct {
 }
 
 // default subscribe
-func SubscribeStatus(args *ws.Args, handler HandlerStatus, handlerError ws.HandlerError, simulated bool) error {
+func SubscribeStatus(args *ws.Args, handler HandlerStatus, handlerError ws.HandlerError, simulated bool) (*websocket.Conn, error) {
 	h := func(message []byte) {
 		var event EventStatus
 		if err := json.Unmarshal(message, &event); err != nil {

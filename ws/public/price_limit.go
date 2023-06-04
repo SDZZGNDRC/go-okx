@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 
 	"github.com/SDZZGNDRC/go-okx/ws"
+	"github.com/gorilla/websocket"
 )
 
 // 限价频道
@@ -24,7 +25,7 @@ type PriceLimit struct {
 }
 
 // default subscribe
-func SubscribePriceLimit(instId string, handler HandlerPriceLimit, handlerError ws.HandlerError, simulated bool) error {
+func SubscribePriceLimit(instId string, handler HandlerPriceLimit, handlerError ws.HandlerError, simulated bool) (*websocket.Conn, error) {
 	args := &ws.Args{
 		Channel: "price-limit",
 		InstId:  instId,

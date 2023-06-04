@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 
 	"github.com/SDZZGNDRC/go-okx/ws"
+	"github.com/gorilla/websocket"
 )
 
 // 标记价格频道
@@ -24,7 +25,7 @@ type MarkPrice struct {
 }
 
 // default subscribe
-func SubscribeMarkPrice(instId string, handler HandlerMarkPrice, handlerError ws.HandlerError, simulated bool) error {
+func SubscribeMarkPrice(instId string, handler HandlerMarkPrice, handlerError ws.HandlerError, simulated bool) (*websocket.Conn, error) {
 	args := &ws.Args{
 		Channel: "mark-price",
 		InstId:  instId,

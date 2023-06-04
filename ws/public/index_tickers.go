@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 
 	"github.com/SDZZGNDRC/go-okx/ws"
+	"github.com/gorilla/websocket"
 )
 
 // 指数行情频道
@@ -28,7 +29,7 @@ type IndexTickers struct {
 }
 
 // default subscribe
-func SubscribeIndexTickers(instId string, handler HandlerIndexTickers, handlerError ws.HandlerError, simulated bool) error {
+func SubscribeIndexTickers(instId string, handler HandlerIndexTickers, handlerError ws.HandlerError, simulated bool) (*websocket.Conn, error) {
 	args := &ws.Args{
 		Channel: "index-tickers",
 		InstId:  instId,

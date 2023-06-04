@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 
 	"github.com/SDZZGNDRC/go-okx/ws"
+	"github.com/gorilla/websocket"
 )
 
 // 资金费率频道
@@ -26,7 +27,7 @@ type FundingRate struct {
 }
 
 // default subscribe
-func SubscribeFundingRate(instId string, handler HandlerFundingRate, handlerError ws.HandlerError, simulated bool) error {
+func SubscribeFundingRate(instId string, handler HandlerFundingRate, handlerError ws.HandlerError, simulated bool) (*websocket.Conn, error) {
 	args := &ws.Args{
 		Channel: "funding-rate",
 		InstId:  instId,

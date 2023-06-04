@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 
 	"github.com/SDZZGNDRC/go-okx/ws"
+	"github.com/gorilla/websocket"
 )
 
 // 预估交割/行权价格频道
@@ -25,7 +26,7 @@ type EstimatedPrice struct {
 }
 
 // default subscribe
-func SubscribeEstimatedPrice(args *ws.Args, handler HandlerEstimatedPrice, handlerError ws.HandlerError, simulated bool) error {
+func SubscribeEstimatedPrice(args *ws.Args, handler HandlerEstimatedPrice, handlerError ws.HandlerError, simulated bool) (*websocket.Conn, error) {
 	args.Channel = "estimated-price"
 
 	h := func(message []byte) {

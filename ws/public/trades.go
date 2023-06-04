@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 
 	"github.com/SDZZGNDRC/go-okx/ws"
+	"github.com/gorilla/websocket"
 )
 
 // 交易频道
@@ -26,7 +27,7 @@ type Trade struct {
 }
 
 // default subscribe
-func SubscribeTrades(instId string, handler HandlerTrades, handlerError ws.HandlerError, simulated bool) error {
+func SubscribeTrades(instId string, handler HandlerTrades, handlerError ws.HandlerError, simulated bool) (*websocket.Conn, error) {
 	args := &ws.Args{
 		Channel: "trades",
 		InstId:  instId,
