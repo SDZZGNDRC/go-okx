@@ -17,8 +17,8 @@ func TestBooks(t *testing.T) {
 		Channel: "books",
 		InstId:  "APT-USDC",
 	}
-	handler := func(c public.EventBooks) {
-		log.Println(c)
+	handler := func(c interface{}) {
+		log.Println(c.(public.EventBooks))
 	}
 	handlerError := func(err error) {
 		panic(err)
@@ -67,14 +67,15 @@ func BooksCorrectnessHelper(instId string) {
 		Channel: "books",
 		InstId:  instId,
 	}
-	handler := func(e public.EventBooks) {
+	handler := func(e interface{}) {
+		eventBooks := e.(public.EventBooks)
 		var t [][]string
-		if e.Action == "snapshot" { // 全量数据
-			CurrentBooks.Asks = e.Data[0].Asks
-			CurrentBooks.Bids = e.Data[0].Bids
+		if eventBooks.Action == "snapshot" { // 全量数据
+			CurrentBooks.Asks = eventBooks.Data[0].Asks
+			CurrentBooks.Bids = eventBooks.Data[0].Bids
 		} else { // 增量数据
 			// 更新Asks
-			for _, ask := range e.Data[0].Asks {
+			for _, ask := range eventBooks.Data[0].Asks {
 				price := ask[0]
 				price_f, err := strconv.ParseFloat(price, 64)
 				if err != nil {
@@ -125,7 +126,7 @@ func BooksCorrectnessHelper(instId string) {
 			}
 
 			// 更新Bids
-			for _, bid := range e.Data[0].Bids {
+			for _, bid := range eventBooks.Data[0].Bids {
 				price := bid[0]
 				price_f, err := strconv.ParseFloat(price, 64)
 				if err != nil {
@@ -177,7 +178,7 @@ func BooksCorrectnessHelper(instId string) {
 			}
 		}
 
-		CurrentBooks.Checksum = e.Data[0].Checksum
+		CurrentBooks.Checksum = eventBooks.Data[0].Checksum
 		calChecksum := public.CalculateChecksum(CurrentBooks)
 		if calChecksum != CurrentBooks.Checksum {
 			log.Printf("%s: calCheckSum:%d, correct:%d\n", instId, calChecksum, CurrentBooks.Checksum)
