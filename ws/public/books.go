@@ -9,7 +9,7 @@ import (
 
 // 深度频道
 
-type HandlerBooks func(EventBooks)
+type HandlerBooks func(interface{})
 
 type EventBooks struct {
 	Arg    ws.Args `json:"arg"`

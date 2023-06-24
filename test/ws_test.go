@@ -43,6 +43,23 @@ func TestBooksCorrectness(t *testing.T) {
 	select {} // stick forever
 }
 
+func TestProductions(t *testing.T) {
+	args := &ws.Args{
+		Channel:  "instruments",
+		InstType: "FUTURES",
+	}
+	handler := func(c public.EventProducts) {
+		log.Println(c)
+	}
+	handlerError := func(err error) {
+		panic(err)
+	}
+	if _, err := public.SubscribeProducts(args, handler, handlerError, false); err != nil {
+		panic(err)
+	}
+	select {} // Wait forever
+}
+
 func BooksCorrectnessHelper(instId string) {
 	LastBooks := public.Book{}
 	CurrentBooks := public.Book{}
