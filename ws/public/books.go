@@ -25,7 +25,7 @@ type Book struct {
 }
 
 // default subscribe
-func SubscribeBooks(args *ws.Args, handler HandlerBooks, handlerError ws.HandlerError, simulated bool) (*websocket.Conn, error) {
+func SubscribeBooks(args *ws.Args, handler HandlerFunc, handlerError ws.HandlerError, simulated bool) (*websocket.Conn, error) {
 	h := func(message []byte) { // convert raw data into EventBooks
 		var event EventBooks
 		if err := json.Unmarshal(message, &event); err != nil {

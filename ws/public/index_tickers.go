@@ -29,7 +29,7 @@ type IndexTickers struct {
 }
 
 // default subscribe
-func SubscribeIndexTickers(instId string, handler HandlerIndexTickers, handlerError ws.HandlerError, simulated bool) (*websocket.Conn, error) {
+func SubscribeIndexTickers(instId string, handler HandlerFunc, handlerError ws.HandlerError, simulated bool) (*websocket.Conn, error) {
 	args := &ws.Args{
 		Channel: "index-tickers",
 		InstId:  instId,

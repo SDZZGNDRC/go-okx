@@ -26,7 +26,7 @@ type OpenInterest struct {
 }
 
 // default subscribe
-func SubscribeOpenInterest(instId string, handler HandlerOpenInterest, handlerError ws.HandlerError, simulated bool) (*websocket.Conn, error) {
+func SubscribeOpenInterest(instId string, handler HandlerFunc, handlerError ws.HandlerError, simulated bool) (*websocket.Conn, error) {
 	args := &ws.Args{
 		Channel: "open-interest",
 		InstId:  instId,

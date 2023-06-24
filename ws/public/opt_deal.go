@@ -33,7 +33,7 @@ type OptDeal struct {
 }
 
 // default subscribe
-func SubscribeOptDeal(args *ws.Args, handler HandlerOptDeal, handlerError ws.HandlerError, simulated bool) (*websocket.Conn, error) {
+func SubscribeOptDeal(args *ws.Args, handler HandlerFunc, handlerError ws.HandlerError, simulated bool) (*websocket.Conn, error) {
 	h := func(message []byte) {
 		var event EventOptDeal
 		if err := json.Unmarshal(message, &event); err != nil {

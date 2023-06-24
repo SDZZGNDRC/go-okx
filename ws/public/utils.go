@@ -5,6 +5,8 @@ import (
 	"hash/crc32"
 )
 
+type HandlerFunc func(interface{})
+
 // 计算订单簿的校验和
 func CalculateChecksum(book Book) int32 {
 	var bids, asks []string

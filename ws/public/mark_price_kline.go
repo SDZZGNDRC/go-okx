@@ -45,7 +45,7 @@ type EventMarkPriceKline struct {
 }
 
 // default subscribe
-func SubscribeMarkPriceKline(args *ws.Args, handler HandlerMarkPriceKline, handlerError ws.HandlerError, simulated bool) (*websocket.Conn, error) {
+func SubscribeMarkPriceKline(args *ws.Args, handler HandlerFunc, handlerError ws.HandlerError, simulated bool) (*websocket.Conn, error) {
 	h := func(message []byte) {
 		var event EventMarkPriceKline
 		if err := json.Unmarshal(message, &event); err != nil {

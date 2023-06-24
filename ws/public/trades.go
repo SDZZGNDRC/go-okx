@@ -27,7 +27,7 @@ type Trade struct {
 }
 
 // default subscribe
-func SubscribeTrades(instId string, handler HandlerTrades, handlerError ws.HandlerError, simulated bool) (*websocket.Conn, error) {
+func SubscribeTrades(instId string, handler HandlerFunc, handlerError ws.HandlerError, simulated bool) (*websocket.Conn, error) {
 	args := &ws.Args{
 		Channel: "trades",
 		InstId:  instId,

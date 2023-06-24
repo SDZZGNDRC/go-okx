@@ -39,7 +39,7 @@ type OptSummary struct {
 }
 
 // default subscribe
-func SubscribeOptSummary(instFamily string, handler HandlerOptSummary, handlerError ws.HandlerError, simulated bool) (*websocket.Conn, error) {
+func SubscribeOptSummary(instFamily string, handler HandlerFunc, handlerError ws.HandlerError, simulated bool) (*websocket.Conn, error) {
 	args := &ws.Args{
 		Channel:    "opt-summary",
 		InstFamily: instFamily,

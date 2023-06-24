@@ -27,7 +27,7 @@ type FundingRate struct {
 }
 
 // default subscribe
-func SubscribeFundingRate(instId string, handler HandlerFundingRate, handlerError ws.HandlerError, simulated bool) (*websocket.Conn, error) {
+func SubscribeFundingRate(instId string, handler HandlerFunc, handlerError ws.HandlerError, simulated bool) (*websocket.Conn, error) {
 	args := &ws.Args{
 		Channel: "funding-rate",
 		InstId:  instId,

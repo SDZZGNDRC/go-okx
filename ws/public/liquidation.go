@@ -33,7 +33,7 @@ type Liquidation struct {
 }
 
 // default subscribe
-func SubscribeLiquidation(args *ws.Args, handler HandlerLiquidation, handlerError ws.HandlerError, simulated bool) (*websocket.Conn, error) {
+func SubscribeLiquidation(args *ws.Args, handler HandlerFunc, handlerError ws.HandlerError, simulated bool) (*websocket.Conn, error) {
 	h := func(message []byte) {
 		var event EventLiquidation
 		if err := json.Unmarshal(message, &event); err != nil {
