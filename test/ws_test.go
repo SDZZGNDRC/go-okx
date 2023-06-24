@@ -48,8 +48,8 @@ func TestProductions(t *testing.T) {
 		Channel:  "instruments",
 		InstType: "FUTURES",
 	}
-	handler := func(c public.EventProducts) {
-		log.Println(c)
+	handler := func(c interface{}) {
+		log.Println(c.(public.EventProducts))
 	}
 	handlerError := func(err error) {
 		panic(err)
