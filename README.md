@@ -11,7 +11,7 @@ A golang sdk for okx api.
 #### Books
 
 > 深度频道
-> 参数: instId  
+> 参数: 全体instId  
 > 数量: 1.6K  
 > 爬取: √
 
@@ -20,7 +20,7 @@ A golang sdk for okx api.
 > 预估交割/行权价格频道  
 > 获取永续合约，交割合约和期权预估交割/行权价。  
 > 交割/行权预估价只有交割/行权前一小时开始推送预估交割/行权价，有价格变化就推送  
-> 参数: {FUTURES|SWAP|OPTION} + instId  
+> 参数: instType{FUTURES|SWAP|OPTION} + instId  
 > 数量: 1095  
 > 爬取: √
 
@@ -109,7 +109,8 @@ A golang sdk for okx api.
 > 限价频道  
 > 获取衍生品交易的最高买价和最低卖价。限价有变化时，每5秒推送一次数据，限价没变化时，不推送数据  
 > 参数: instId{SWAP|FUTURES|OPTION}
-> 1065
+> 数量: 1065  
+> 爬取: ×
 
 #### Status
 
@@ -121,7 +122,8 @@ A golang sdk for okx api.
 > 获取产品的最新成交价、买一价、卖一价和24小时交易量等信息。  
 > 最快100ms推送一次，没有触发事件时不推送，触发推送的事件有：成交、买一卖一发生变动。
 > 参数: instId
-> 数量: 1.6K
+> 数量: 1.6K  
+> 爬取: ×
 
 #### Trades
 
@@ -129,5 +131,6 @@ A golang sdk for okx api.
 > 获取最近的成交数据，有成交数据就推送，每次推送仅包含一条成交数据。
 > 参数: instId  
 > 数量: 1.6K
+> 爬取: ×
 
-***Total: ~10K***
+***Total: ~6.4K***
