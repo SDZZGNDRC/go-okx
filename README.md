@@ -21,7 +21,7 @@ A golang sdk for okx api.
 > 获取永续合约，交割合约和期权预估交割/行权价。  
 > 交割/行权预估价只有交割/行权前一小时开始推送预估交割/行权价，有价格变化就推送  
 > 参数: instType{FUTURES|SWAP|OPTION} + instId  
-> 数量: 1095  
+> 数量: ~300  
 > 爬取: √
 
 #### FundingRate
@@ -29,7 +29,7 @@ A golang sdk for okx api.
 > 资金费率频道  
 > 获取永续合约资金费率，30秒到90秒内推送一次数据  
 > 参数: instId(SWAP)  
-> 数量: 167  
+> 数量: ~167  
 > 爬取: √
 
 #### IndexKline
@@ -56,7 +56,7 @@ A golang sdk for okx api.
 > 数量: 2 * 1.6K  
 > 爬取: ×
 
-#### Liquidation
+#### LiquidationOrders
 
 > 平台公共爆仓单频道  
 > 获取爆仓单信息。产品ID维度最多一秒推一条爆仓单信息。
@@ -77,7 +77,7 @@ A golang sdk for okx api.
 > 标记价格频道  
 > 获取标记价格，标记价格有变化时，每200ms推送一次数据，标记价格没变化时，每10s推送一次数据
 > 参数: instId  
-> 数量: 1.6K  
+> 数量: ~479  
 > 爬取: √
 
 #### OpenInterest
@@ -94,7 +94,7 @@ A golang sdk for okx api.
 > 获取最近的期权成交数据，有成交数据就推送，每次推送仅包含一条成交数据。
 > 参数: instType{OPTION} + instId
 > 数量: 868  
-> 爬取: √
+> 爬取: ×
 
 #### OptSummary
 
@@ -123,7 +123,7 @@ A golang sdk for okx api.
 > 最快100ms推送一次，没有触发事件时不推送，触发推送的事件有：成交、买一卖一发生变动。
 > 参数: instId
 > 数量: 1.6K  
-> 爬取: ×
+> 爬取: √
 
 #### Trades
 
@@ -131,6 +131,4 @@ A golang sdk for okx api.
 > 获取最近的成交数据，有成交数据就推送，每次推送仅包含一条成交数据。
 > 参数: instId  
 > 数量: 1.6K
-> 爬取: ×
-
-***Total: ~6.4K***
+> 爬取: √
