@@ -18,12 +18,18 @@ type EventFundingRate struct {
 }
 
 type FundingRate struct {
-	FundingRate     string `json:"fundingRate"`
-	FundingTime     int64  `json:"fundingTime,string"`
-	InstId          string `json:"instId"`
 	InstType        string `json:"instType"`
+	InstId          string `json:"instId"`
+	Method          string `json:"method"`
+	FundingRate     string `json:"fundingRate"`
 	NextFundingRate string `json:"nextFundingRate"`
+	FundingTime     int64  `json:"fundingTime,string"`
 	NextFundingTime int64  `json:"nextFundingTime,string"`
+	MinFundingRate  string `json:"minFundingRate"`
+	MaxFundingRate  string `json:"maxFundingRate"`
+	SettState       string `json:"settState"`
+	Premium         string `json:"premium"`
+	Ts              int64  `json:"ts,string"`
 }
 
 // default subscribe
