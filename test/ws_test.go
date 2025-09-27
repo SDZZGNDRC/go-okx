@@ -17,13 +17,13 @@ func TestBooks(t *testing.T) {
 		Channel: "books",
 		InstId:  "APT-USDC",
 	}
-	handler := func(c interface{}) {
-		log.Println(c.(public.EventBooks))
+	handler := func(c []byte) {
+		log.Println(string(c))
 	}
 	handlerError := func(err error) {
 		panic(err)
 	}
-	if _, err := public.SubscribeBooks(args, handler, handlerError, false); err != nil {
+	if _, err := public.NewPublic(false).Subscribe(args, handler, handlerError); err != nil {
 		panic(err)
 	}
 	select {} // Wait forever

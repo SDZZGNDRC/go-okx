@@ -2,6 +2,7 @@ package public
 
 import (
 	"encoding/json"
+	"time"
 
 	"github.com/SDZZGNDRC/go-okx/ws"
 	"github.com/gorilla/websocket"
@@ -13,8 +14,9 @@ import (
 type HandlerOptDeal func(EventOptDeal)
 
 type EventOptDeal struct {
-	Arg  ws.Args   `json:"arg"`
-	Data []OptDeal `json:"data"`
+	Arg     ws.Args   `json:"arg"`
+	Data    []OptDeal `json:"data"`
+	LocalTs int64     `json:"localTs"`
 }
 
 type OptDeal struct {
@@ -40,6 +42,7 @@ func SubscribeOptDeal(args *ws.Args, handler HandlerFunc, handlerError ws.Handle
 			handlerError(err)
 			return
 		}
+		event.LocalTs = time.Now().UnixMilli()
 		handler(event)
 	}
 

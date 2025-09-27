@@ -2,6 +2,7 @@ package public
 
 import (
 	"encoding/json"
+	"time"
 
 	"github.com/SDZZGNDRC/go-okx/ws"
 	"github.com/gorilla/websocket"
@@ -13,8 +14,9 @@ import (
 type HandlerLiquidation func(EventLiquidation)
 
 type EventLiquidation struct {
-	Arg  ws.Args       `json:"arg"`
-	Data []Liquidation `json:"data"`
+	Arg     ws.Args       `json:"arg"`
+	Data    []Liquidation `json:"data"`
+	LocalTs int64         `json:"localTs"`
 }
 
 type Liquidation struct {
@@ -40,6 +42,7 @@ func SubscribeLiquidation(args *ws.Args, handler HandlerFunc, handlerError ws.Ha
 			handlerError(err)
 			return
 		}
+		event.LocalTs = time.Now().UnixMilli()
 		handler(event)
 	}
 

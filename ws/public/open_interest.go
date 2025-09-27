@@ -2,6 +2,7 @@ package public
 
 import (
 	"encoding/json"
+	"time"
 
 	"github.com/SDZZGNDRC/go-okx/ws"
 	"github.com/gorilla/websocket"
@@ -13,8 +14,9 @@ import (
 type HandlerOpenInterest func(EventOpenInterest)
 
 type EventOpenInterest struct {
-	Arg  ws.Args        `json:"arg"`
-	Data []OpenInterest `json:"data"`
+	Arg     ws.Args        `json:"arg"`
+	Data    []OpenInterest `json:"data"`
+	LocalTs int64          `json:"localTs"`
 }
 
 type OpenInterest struct {
@@ -38,6 +40,7 @@ func SubscribeOpenInterest(instId string, handler HandlerFunc, handlerError ws.H
 			handlerError(err)
 			return
 		}
+		event.LocalTs = time.Now().UnixMilli()
 		handler(event)
 	}
 

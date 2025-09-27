@@ -2,6 +2,7 @@ package public
 
 import (
 	"encoding/json"
+	"time"
 
 	"github.com/SDZZGNDRC/go-okx/ws"
 	"github.com/gorilla/websocket"
@@ -13,8 +14,9 @@ import (
 type HandlerIndexTickers func(EventIndexTickers)
 
 type EventIndexTickers struct {
-	Arg  ws.Args        `json:"arg"`
-	Data []IndexTickers `json:"data"`
+	Arg     ws.Args        `json:"arg"`
+	Data    []IndexTickers `json:"data"`
+	LocalTs int64          `json:"localTs"`
 }
 
 type IndexTickers struct {
@@ -41,6 +43,7 @@ func SubscribeIndexTickers(instId string, handler HandlerFunc, handlerError ws.H
 			handlerError(err)
 			return
 		}
+		event.LocalTs = time.Now().UnixMilli()
 		handler(event)
 	}
 

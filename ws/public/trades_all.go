@@ -2,6 +2,7 @@ package public
 
 import (
 	"encoding/json"
+	"time"
 
 	"github.com/SDZZGNDRC/go-okx/ws"
 	"github.com/gorilla/websocket"
@@ -13,8 +14,9 @@ import (
 type HandlerTradesAll func(EventTrades)
 
 type EventTradesAll struct {
-	Arg  ws.Args `json:"arg"`
-	Data []Trade `json:"data"`
+	Arg     ws.Args `json:"arg"`
+	Data    []Trade `json:"data"`
+	LocalTs int64   `json:"localTs"`
 }
 
 type TradeAll struct {
@@ -39,6 +41,7 @@ func SubscribeTradesAll(instId string, handler HandlerFunc, handlerError ws.Hand
 			handlerError(err)
 			return
 		}
+		event.LocalTs = time.Now().UnixMilli()
 		handler(event)
 	}
 

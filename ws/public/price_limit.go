@@ -2,6 +2,7 @@ package public
 
 import (
 	"encoding/json"
+	"time"
 
 	"github.com/SDZZGNDRC/go-okx/ws"
 	"github.com/gorilla/websocket"
@@ -13,8 +14,9 @@ import (
 type HandlerPriceLimit func(EventPriceLimit)
 
 type EventPriceLimit struct {
-	Arg  ws.Args      `json:"arg"`
-	Data []PriceLimit `json:"data"`
+	Arg     ws.Args      `json:"arg"`
+	Data    []PriceLimit `json:"data"`
+	LocalTs int64        `json:"localTs"`
 }
 
 type PriceLimit struct {
@@ -37,6 +39,7 @@ func SubscribePriceLimit(instId string, handler HandlerFunc, handlerError ws.Han
 			handlerError(err)
 			return
 		}
+		event.LocalTs = time.Now().UnixMilli()
 		handler(event)
 	}
 

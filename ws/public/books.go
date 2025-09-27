@@ -2,6 +2,7 @@ package public
 
 import (
 	"encoding/json"
+	"time"
 
 	"github.com/SDZZGNDRC/go-okx/ws"
 	"github.com/gorilla/websocket"
@@ -12,9 +13,10 @@ import (
 type HandlerBooks func(interface{})
 
 type EventBooks struct {
-	Arg    ws.Args `json:"arg"`
-	Data   []Book  `json:"data"`
-	Action string  `json:"action"`
+	Arg     ws.Args `json:"arg"`
+	Data    []Book  `json:"data"`
+	Action  string  `json:"action"`
+	LocalTs int64   `json:"localTs"`
 }
 
 type Book struct {
@@ -34,6 +36,7 @@ func SubscribeBooks(args *ws.Args, handler HandlerFunc, handlerError ws.HandlerE
 			handlerError(err)
 			return
 		}
+		event.LocalTs = time.Now().UnixMilli()
 		handler(event)
 	}
 

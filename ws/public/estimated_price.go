@@ -2,6 +2,7 @@ package public
 
 import (
 	"encoding/json"
+	"time"
 
 	"github.com/SDZZGNDRC/go-okx/ws"
 	"github.com/gorilla/websocket"
@@ -14,8 +15,9 @@ import (
 type HandlerEstimatedPrice func(EventEstimatedPrice)
 
 type EventEstimatedPrice struct {
-	Arg  ws.Args          `json:"arg"`
-	Data []EstimatedPrice `json:"data"`
+	Arg     ws.Args          `json:"arg"`
+	Data    []EstimatedPrice `json:"data"`
+	LocalTs int64            `json:"localTs"`
 }
 
 type EstimatedPrice struct {
@@ -35,6 +37,7 @@ func SubscribeEstimatedPrice(args *ws.Args, handler HandlerFunc, handlerError ws
 			handlerError(err)
 			return
 		}
+		event.LocalTs = time.Now().UnixMilli()
 		handler(event)
 	}
 

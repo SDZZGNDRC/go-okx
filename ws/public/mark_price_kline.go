@@ -2,6 +2,7 @@ package public
 
 import (
 	"encoding/json"
+	"time"
 
 	"github.com/SDZZGNDRC/go-okx/ws"
 	"github.com/gorilla/websocket"
@@ -40,8 +41,9 @@ import (
 type HandlerMarkPriceKline func(EventMarkPriceKline)
 
 type EventMarkPriceKline struct {
-	Arg  ws.Args    `json:"arg"`
-	Data [][]string `json:"data"`
+	Arg     ws.Args    `json:"arg"`
+	Data    [][]string `json:"data"`
+	LocalTs int64      `json:"localTs"`
 }
 
 // default subscribe
@@ -52,6 +54,7 @@ func SubscribeMarkPriceKline(args *ws.Args, handler HandlerFunc, handlerError ws
 			handlerError(err)
 			return
 		}
+		event.LocalTs = time.Now().UnixMilli()
 		handler(event)
 	}
 
